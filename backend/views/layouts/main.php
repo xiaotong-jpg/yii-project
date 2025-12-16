@@ -72,7 +72,20 @@ $this->registerJsFile('/advanced/backend/web/adminlte/dist/js/adminlte.min.js', 
                             <p>文章管理</p>
                         </a>
                     </li>
-
+                    <!-- 示例菜单：志愿者管理 -->
+                    <li class="nav-item">
+                        <a href="<?= Url::to(['volunteers/index']) ?>" class="nav-link <?= Yii::$app->controller->id=='volunteers'?'active':'' ?>">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>志愿者管理</p>
+                        </a>
+                    </li>
+                    <!-- 示例菜单：纪念馆管理 -->
+                    <li class="nav-item">
+                        <a href="<?= Url::to(['museums/index']) ?>" class="nav-link <?= Yii::$app->controller->id=='museums'?'active':'' ?>">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>纪念馆管理</p>
+                        </a>
+                    </li>
 
                     <!-- 示例菜单：英雄人物 -->
                     <li class="nav-item">
