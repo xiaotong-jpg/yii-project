@@ -9,6 +9,8 @@
 /* @var $content string */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
+
 
 $this->registerCssFile('/advanced/backend/web/adminlte/plugins/fontawesome-free/css/all.min.css');
 $this->registerCssFile('/advanced/backend/web/adminlte/dist/css/adminlte.min.css');
@@ -65,11 +67,12 @@ $this->registerJsFile('/advanced/backend/web/adminlte/dist/js/adminlte.min.js', 
 
                     <!-- 示例菜单：文章管理 -->
                     <li class="nav-item">
-                        <a href="/article/index" class="nav-link">
+                        <a href="<?= Url::to(['article/index']) ?>" class="nav-link <?= Yii::$app->controller->id=='article'?'active':'' ?>">
                             <i class="nav-icon fas fa-book"></i>
                             <p>文章管理</p>
                         </a>
                     </li>
+
 
                     <!-- 示例菜单：英雄人物 -->
                     <li class="nav-item">
