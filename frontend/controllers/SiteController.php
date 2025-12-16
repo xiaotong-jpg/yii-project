@@ -17,6 +17,7 @@ use frontend\models\ContactForm;
 
 use common\models\HeroPerson; // 引入刚才的模型
 use common\models\WarMapLocation;
+use common\models\Article;
 
 /**
  * Site controller
@@ -83,6 +84,46 @@ class SiteController extends Controller
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
+    }
+    /**
+     * Displays homepage.
+     *
+     * @return mixed
+     */
+    public function actionIndex()
+{
+    // 固定取 220,222,223 三条
+    $hotArticles = Article::find()
+        ->where(['id' => [220, 222, 223]])
+        // 如需只显示已发布的可以再加状态条件：
+        // ->andWhere(['status' => 1])
+        // 按 id 指定顺序排序（MySQL）
+        ->orderBy(new \yii\db\Expression("FIELD(id, 220, 222, 223)"))
+        ->all();
+
+        // 轮播+标题联动的 6 条
+        $featureIds = [244, 258, 256, 230, 232, 251];
+        $featuredArticles = Article::find()
+            ->where(['id' => $featureIds])
+            ->orderBy(new \yii\db\Expression("FIELD(id, 244, 258, 256, 230, 232, 251)"))
+            ->all();
+
+    return $this->render('index', [
+        'hotArticles' => $hotArticles,
+            'featuredArticles' => $featuredArticles,
+    ]);
+}
+
+    public function actionArticle($id)
+    {
+        $model = Article::findOne($id);
+        if ($model === null) {
+            throw new \yii\web\NotFoundHttpException('文章不存在');
+        }
+
+        return $this->render('article', [
+            'model' => $model,
+        ]);
     }
 
     /**
