@@ -1,12 +1,11 @@
 <?php
-
-use yii\helpers\Html;
-use yii\grid\GridView;
-use yii\widgets\Pjax;
 /**
  * Team: NoDDL,NKU
  * Coding by wanghaoran 2311089
  */
+use yii\helpers\Html;
+use yii\grid\GridView;
+use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\ArticleSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -34,10 +33,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'title',
             'cover_image',
-            'content:ntext',
+            //'content:ntext',
             'author',
             //'publish_date',
-            //'source_url:url',
+            'source_url:url',
             //'status',
 
             ['class' => 'yii\grid\ActionColumn'],
