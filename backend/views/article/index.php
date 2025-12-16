@@ -3,6 +3,10 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+/**
+ * Team: NoDDL,NKU
+ * Coding by wanghaoran 2311089
+ */
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\ArticleSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
