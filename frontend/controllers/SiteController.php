@@ -19,7 +19,7 @@ use common\models\HeroPerson; // 引入刚才的模型
 use common\models\WarMapLocation;
 use common\models\Article;
 use common\models\Volunteers;
-
+use common\models\Museums;
 /**
  * Site controller
  */
@@ -113,11 +113,17 @@ class SiteController extends Controller
             ->orderBy(['publish_date' => SORT_DESC, 'id' => SORT_DESC])
             ->limit(7)
             ->all();
+    // 纪念馆列表（首页案例区使用，仅展示 5 个）
+        $museums = Museums::find()
+            ->orderBy(['id' => SORT_ASC])
+            ->limit(5)
+            ->all();
     
     return $this->render('index', [
         'hotArticles' => $hotArticles,
             'featuredArticles' => $featuredArticles,
             'volunteers' => $volunteers,
+             'museums' => $museums,
     ]);
 }
 
