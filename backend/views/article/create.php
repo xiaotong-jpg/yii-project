@@ -1,7 +1,10 @@
 <?php
 
 use yii\helpers\Html;
-
+/**
+ * Team: NoDDL,NKU
+ * Coding by wanghaoran 2311089
+ */
 /* @var $this yii\web\View */
 /* @var $model common\models\Article */
 
