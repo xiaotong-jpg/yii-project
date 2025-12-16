@@ -4,7 +4,10 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Article */
-
+/**
+ * Team: NoDDL,NKU
+ * Coding by wanghaoran 2311089
+ */
 $this->title = 'Update Article: ' . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Articles', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
