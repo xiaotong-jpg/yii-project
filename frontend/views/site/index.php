@@ -785,133 +785,93 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
          </div>
       </div>
-      <!-- lorw team area -->
-      <div class="lorw_team_area">
+      <!-- volunteers slider area -->
+      <?php /* @var $volunteers common\models\Volunteers[] */ ?>
+      <?php if (!empty($volunteers)): ?>
+      <style>
+         .vol-section{margin:50px 0;}
+         .vol-header{text-align:center;margin-bottom:24px;}
+         .vol-header h2{margin:0;font-size:28px;}
+         .vol-header h3{margin:6px 0 0;font-size:18px;color:#a57a2f;letter-spacing:1px;}
+         .vol-wrap{position:relative;}
+         .vol-window{overflow:hidden;}
+         .vol-track{display:flex;gap:24px;transition:transform .35s ease;}
+         .vol-card{flex:0 0 300px;max-width:300px;border:1px solid #eee;border-radius:6px;overflow:hidden;box-shadow:0 8px 18px rgba(0,0,0,0.06);background:#fff;}
+         .vol-card img{width:100%;height:220px;object-fit:cover;display:block;}
+         .vol-card .vol-body{padding:14px 16px;}
+         .vol-card .vol-title{font-size:18px;font-weight:700;color:#0b1a3f;margin:0 0 8px;line-height:1.35;}
+         .vol-card .vol-summary{font-size:14px;color:#555;margin:0 0 10px;min-height:40px;}
+         .vol-card .vol-meta{font-size:12px;color:#999;}
+         .vol-nav{position:absolute;top:40%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:1px solid #d0d0d0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.12);}
+         .vol-nav:disabled{opacity:0.4;cursor:not-allowed;}
+         .vol-prev{left:-10px;}
+         .vol-next{right:-10px;}
+      </style>
+      <div class="vol-section"> 
          <div class="container">
-            <div class="row">
-               <div class="col-lg-12">
-                  <div class="col-lg-12">
-                     <div class="witr_section_title">
-                        <div class="witr_section_title_inner text-center">
-                           <h2>OUR TEAM</h2>
-                           <h3>Our Expert Lawyers</h3>
-                        </div>
+            <div class="vol-header">
+               <h3>Volunteers</h3>
+               <h2>志愿者风采</h2>
+                  </div>
+                  <div class="vol-wrap">
+               <button class="vol-nav vol-prev" type="button" aria-label="prev">‹</button>
+               <div class="vol-window">
+                  <div class="vol-track">
+                     <?php foreach ($volunteers as $vol): ?>
+                        <?php
+                        $link = !empty($vol->detail_url) ? $vol->detail_url : '#';
+                        $photo = $vol->photo_url;
+                        $imgUrl = '';
+                        if (!empty($photo)) {
+                            $imgUrl = preg_match('/^https?:/i', $photo)
+                                ? $photo
+                                : Url::to('@web/images/' . $photo);
+                        }
+                        ?>
+                        <a class="vol-card" href="<?= $link ?>" target="_blank">
+                           <?php if ($imgUrl): ?>
+                              <img src="<?= $imgUrl ?>" alt="<?= Html::encode($vol->title) ?>">
+                           <?php endif; ?>
+                           <div class="vol-body">
+                              <div class="vol-title"><?= Html::encode($vol->title) ?></div>
+                              <?php if (!empty($vol->summary)): ?>
+                                 <p class="vol-summary"><?= Html::encode(mb_substr(strip_tags((string)$vol->summary), 0, 60)) ?>...</p>
+                              <?php endif; ?>
+                              <div class="vol-meta"><?= Html::encode($vol->publish_date) ?></div>
                      </div>
+                  </a>
+                     <?php endforeach; ?>
                   </div>
                </div>
+               <button class="vol-nav vol-next" type="button" aria-label="next">›</button>
             </div>
-            <div class="row team_active">
-               <!-- 1 single team -->
-               <div class="witr_all_mb_30 col-md-12 col-xs-12 col-sm-12 col-lg-12">
-                  <div class=" all_color_team ">
-                     <div class="witr_team_section"> 
-                        <img src="<?= Url::to('@web/images/team-04.jpg') ?>" alt="image" />
                      </div>
-                     <div class="post_team_content">
-                        <div class="post_team_icon_9 all_team_icon_o_color">
-                           <ul class="witr_pots_team_s">
-                              <li>
-                                 <a href="#"><i class="icofont-facebook"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-twitter"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-pinterest"></i></a>
-                              </li>
-                           </ul>
                         </div>
-                        <div class="post_team_content9 all_content_bg_color">
-                           <h5><a href="#">Liton Sarkar </a></h5>
-                           <span>Founder </span>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- 2 single team -->
-               <div class="witr_all_mb_30 col-md-12 col-xs-12 col-sm-12 col-lg-12">
-                  <div class=" all_color_team ">
-                     <div class="witr_team_section"> 
-                        <img src="<?= Url::to('@web/images/team-05.jpg') ?>" alt="image" />
-                     </div>
-                     <div class="post_team_content">
-                        <div class="post_team_icon_9 all_team_icon_o_color">
-                           <ul class="witr_pots_team_s">
-                              <li>
-                                 <a href="#"><i class="icofont-facebook"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-twitter"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-pinterest"></i></a>
-                              </li>
-                           </ul>
-                        </div>
-                        <div class="post_team_content9 all_content_bg_color">
-                           <h5><a href="#">Tomas Brown </a></h5>
-                           <span>Founder </span>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- 3 single team -->
-               <div class="witr_all_mb_30 col-md-12 col-xs-12 col-sm-12 col-lg-12">
-                  <div class=" all_color_team ">
-                     <div class="witr_team_section"> 
-                        <img src="<?= Url::to('@web/images/team-06.jpg') ?>" alt="image" />
-                     </div>
-                     <div class="post_team_content">
-                        <div class="post_team_icon_9 all_team_icon_o_color">
-                           <ul class="witr_pots_team_s">
-                              <li>
-                                 <a href="#"><i class="icofont-facebook"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-twitter"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-pinterest"></i></a>
-                              </li>
-                           </ul>
-                        </div>
-                        <div class="post_team_content9 all_content_bg_color">
-                           <h5><a href="#">Assadul Islam </a></h5>
-                           <span>Founder </span>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- 4 single team -->
-               <div class="witr_all_mb_30 col-md-12 col-xs-12 col-sm-12 col-lg-12">
-                  <div class=" all_color_team ">
-                     <div class="witr_team_section"> 
-                        <img src="<?= Url::to('@web/images/team-05.jpg') ?>" alt="image" />
-                     </div>
-                     <div class="post_team_content">
-                        <div class="post_team_icon_9 all_team_icon_o_color">
-                           <ul class="witr_pots_team_s">
-                              <li>
-                                 <a href="#"><i class="icofont-facebook"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-twitter"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-pinterest"></i></a>
-                              </li>
-                           </ul>
-                        </div>
-                        <div class="post_team_content9 all_content_bg_color">
-                           <h5><a href="#">Shamim Sarkar </a></h5>
-                           <span>Founder </span>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
+               <script>
+         (function(){
+            const track = document.querySelector('.vol-track');
+            const windowEl = document.querySelector('.vol-window');
+            const prev = document.querySelector('.vol-prev');
+            const next = document.querySelector('.vol-next');
+            if(!track || !windowEl) return;
+            const cards = Array.from(track.children);
+            if(!cards.length) return;
+            const gap = 24;
+            const cardWidth = cards[0].getBoundingClientRect().width;
+            let offset = 0;
+            function update(dir){
+               const max = Math.max(0, track.scrollWidth - windowEl.clientWidth);
+               offset = Math.min(max, Math.max(0, offset + dir * (cardWidth + gap)));
+               track.style.transform = 'translateX(' + (-offset) + 'px)';
+               prev.disabled = offset <= 0;
+               next.disabled = offset >= max - 1;
+            }
+            prev && prev.addEventListener('click', () => update(-1));
+            next && next.addEventListener('click', () => update(1));
+            update(0);
+         })();
+      </script>
+      <?php endif; ?>        
 
 
 
