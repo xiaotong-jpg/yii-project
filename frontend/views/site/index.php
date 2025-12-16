@@ -56,87 +56,152 @@ $this->params['breadcrumbs'][] = $this->title;
       <div class="lorw_service_area">
          <div class="container">
             <div class="row service_inner">
-               <!-- 1 single feature -->
-               <div class="col-lg-4 col-md-6">
-                  <div class="em-service all_color_service text-center">
-                     <div class="em_service_content">
-                        <div class="em_single_service_text ">
-                           <div class="service_top_text">
-                              <div class="em-service-icon all_icon_color"><i class="flaticon flaticon-phone-call"></i></div>
-                              <div class="em-service-title">
-                                 <h3><a href="#">Please Call Us to Take an</a></h3>
+               <?php
+               /* @var $hotArticles common\models\Article[] */
+               $cardImages = [
+                   220 => 'https://www.news.cn/photo/20250904/ca7cfeb13a304cdc89d73ca3d57b9853/20250904ca7cfeb13a304cdc89d73ca3d57b9853_202509043876f991b3ad44ee9722fa233d5f4a62.jpg',
+                   222 => 'https://www.news.cn/photo/20250903/01bd5fbb96e14e3a861d1843c078cce8/VsGqt7VUa7e6eMnL.jpg',
+                   223 => 'https://www.news.cn/politics/leaders/20250903/c13ca6bee464410695e47b0fb1e96b8a/20250903c13ca6bee464410695e47b0fb1e96b8a_202509030cc3469416904ba89646c8ecec8d86a0.jpg',
+               ];
+               ?>
+               <?php if (!empty($hotArticles)): ?>
+                  <?php foreach ($hotArticles as $article): ?>
+                     <?php
+                     $link = !empty($article->source_url)
+                         ? $article->source_url
+                         : \yii\helpers\Url::to(['site/article', 'id' => $article->id]);
+                     ?>
+                     <div class="col-lg-4 col-md-6">
+                        <div class="em-service all_color_service text-center" style="background-image: url('<?= isset($cardImages[$article->id]) ? $cardImages[$article->id] : '' ?>'); background-size: cover; background-position: center; position: relative; min-height: 420px;">
+                           <div class="em_service_content" style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 32px; background: linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.65) 100%); color: #fff;">
+                              <div class="em_single_service_text ">
+                                 <div class="em-service-title">
+                                    <h3>
+                                       <a href="<?= $link ?>" style="color: #fff;">
+                                          <?= \yii\helpers\Html::encode($article->title) ?>
+                                       </a>
+                                    </h3>
+                                 </div>
+                                 <div class="em-service-inner">
+                                    <div class="em-service-desc">
+                                       <p style="color: #fff;"><?= \yii\helpers\Html::encode(mb_substr(strip_tags((string)$article->content), 0, 80)) ?>...</p>
+                                    </div>
+                                 </div>
+                                 <div class="service-btn">
+                                    <a href="<?= $link ?>" style="color: #fff; border-color: rgba(255,255,255,0.6);">Read More <span class="icofont-double-right"></span></a>
+                                 </div>
                               </div>
-                           </div>
-                           <div class="em-service-inner">
-                              <div class="em-service-desc">
-                                 <p>Lorem ipsum dolor sit amet, consectetuer 
-                                    adipiscing elit, sed diam nonummy 
-                                    nibh euismod tincidunt
-                                 </p>
-                              </div>
-                           </div>
-                           <div class="service-btn">
-                              <a href="#">Read More <span class="icofont-double-right"></span></a>
                            </div>
                         </div>
                      </div>
+                  <?php endforeach; ?>
+               <?php endif; ?>
+            </div>
+         </div>
+      </div>
+
+      <!-- news showcase area -->
+      <?php
+      /* @var $featuredArticles common\models\Article[] */
+      ?>
+      <?php if (!empty($featuredArticles)): ?>
+      <style>
+         .nh-showcase{margin-top:40px;margin-bottom:40px;}
+         .nh-slide{display:none;position:relative;overflow:hidden;border-radius:6px;}
+         .nh-slide.active{display:block;}
+         .nh-slide img{width:100%;height:420px;object-fit:cover;display:block;}
+         .nh-caption{position:absolute;left:0;right:0;bottom:0;padding:16px 20px;background:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,rgba(0,0,0,0.78) 100%);color:#fff;}
+         .nh-caption h4{margin:0;font-size:20px;line-height:1.4;text-shadow:0 1px 3px rgba(0,0,0,0.6);color:#fff!important;}
+         .nh-caption a{color:#fff!important;text-decoration:none;}
+         .nh-list{list-style:none;padding:0;margin:0;}
+         .nh-item{padding:12px 14px;border-bottom:1px solid #e5e5e5;cursor:pointer;}
+         .nh-item:last-child{border-bottom:none;}
+         .nh-item a{color:#333;display:block;text-decoration:none;}
+         .nh-item.active{background:#f5f5f5;font-weight:600;}
+      </style>
+      <div class="nh-showcase">
+         <div class="container">
+            <div class="row">
+               <div class="col-lg-8">
+                  <div class="nh-carousel">
+                     <?php foreach ($featuredArticles as $idx => $article): ?>
+                        <?php
+                        $link = !empty($article->source_url)
+                            ? $article->source_url
+                            : \yii\helpers\Url::to(['site/article', 'id' => $article->id]);
+                        $cover = $article->cover_image;
+                        $imgUrl = '';
+                        if (!empty($cover)) {
+                            $imgUrl = preg_match('/^https?:/i', $cover)
+                                ? $cover
+                                : \yii\helpers\Url::to('@web/images/' . $cover);
+                        }
+                        ?>
+                        <div class="nh-slide <?= $idx === 0 ? 'active' : '' ?>" data-key="<?= $article->id ?>">
+                           <a href="<?= $link ?>">
+                              <?php if ($imgUrl): ?>
+                                 <img src="<?= $imgUrl ?>" alt="<?= \yii\helpers\Html::encode($article->title) ?>">
+                              <?php endif; ?>
+                              <div class="nh-caption">
+                                 <h4><?= \yii\helpers\Html::encode($article->title) ?></h4>
+                              </div>
+                           </a>
+                        </div>
+                     <?php endforeach; ?>
                   </div>
                </div>
-               <!-- 2 single feature -->
-               <div class="col-lg-4 col-md-6">
-                  <div class="em-service all_color_service text-center">
-                     <div class="em_service_content">
-                        <div class="em_single_service_text ">
-                           <div class="service_top_text">
-                              <div class="em-service-icon all_icon_color"><i class="flaticon flaticon-project-management"></i></div>
-                              <div class="em-service-title">
-                                 <h3><a href="#">Case Dismissed</a></h3>
-                              </div>
-                           </div>
-                           <div class="em-service-inner">
-                              <div class="em-service-desc">
-                                 <p>Lorem ipsum dolor sit amet, consectetuer 
-                                    adipiscing elit, sed diam nonummy 
-                                    nibh euismod tincidunt
-                                 </p>
-                              </div>
-                           </div>
-                           <div class="service-btn">
-                              <a href="#">Read More <span class="icofont-double-right"></span></a>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- 3 single feature -->
-               <div class="col-lg-4 col-md-6">
-                  <div class="em-service all_color_service text-center">
-                     <div class="em_service_content">
-                        <div class="em_single_service_text ">
-                           <div class="service_top_text">
-                              <div class="em-service-icon all_icon_color"><i class="flaticon flaticon-temporary-agency"></i></div>
-                              <div class="em-service-title">
-                                 <h3><a href="#">Expert Attorneys</a></h3>
-                              </div>
-                           </div>
-                           <div class="em-service-inner">
-                              <div class="em-service-desc">
-                                 <p>Lorem ipsum dolor sit amet, consectetuer 
-                                    adipiscing elit, sed diam nonummy 
-                                    nibh euismod tincidunt
-                                 </p>
-                              </div>
-                           </div>
-                           <div class="service-btn">
-                              <a href="#">Read More <span class="icofont-double-right"></span></a>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
+               <div class="col-lg-4">
+                  <ul class="nh-list">
+                     <?php foreach ($featuredArticles as $idx => $article): ?>
+                        <?php
+                        $link = !empty($article->source_url)
+                            ? $article->source_url
+                            : \yii\helpers\Url::to(['site/article', 'id' => $article->id]);
+                        ?>
+                        <li class="nh-item <?= $idx === 0 ? 'active' : '' ?>" data-key="<?= $article->id ?>">
+                           <a href="<?= $link ?>"><?= \yii\helpers\Html::encode($article->title) ?></a>
+                        </li>
+                     <?php endforeach; ?>
+                  </ul>
                </div>
             </div>
          </div>
       </div>
+      <script>
+         (function() {
+            const slides = Array.from(document.querySelectorAll('.nh-slide'));
+            const items = Array.from(document.querySelectorAll('.nh-item'));
+            if (!slides.length) return;
+            let idx = 0;
+            let timer;
+
+            function show(i) {
+               idx = i;
+               slides.forEach((s, k) => s.classList.toggle('active', k === idx));
+               items.forEach((it, k) => it.classList.toggle('active', k === idx));
+            }
+            function next() {
+               const n = (idx + 1) % slides.length;
+               show(n);
+            }
+            function restart() {
+               clearInterval(timer);
+               timer = setInterval(next, 5000);
+            }
+
+            items.forEach((it, i) => {
+               it.addEventListener('mouseenter', () => { show(i); restart(); });
+               it.addEventListener('click', () => { show(i); restart(); });
+            });
+            slides.forEach((s, i) => {
+               s.addEventListener('mouseenter', () => { show(i); restart(); });
+            });
+
+            show(0);
+            restart();
+         })();
+      </script>
+      <?php endif; ?>
       <!-- about area  -->
       <div class="lorw_about_area">
          <div class="container ">
