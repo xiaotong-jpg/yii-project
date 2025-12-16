@@ -18,6 +18,7 @@ use frontend\models\ContactForm;
 use common\models\HeroPerson; // 引入刚才的模型
 use common\models\WarMapLocation;
 use common\models\Article;
+use common\models\Volunteers;
 
 /**
  * Site controller
@@ -107,10 +108,16 @@ class SiteController extends Controller
             ->where(['id' => $featureIds])
             ->orderBy(new \yii\db\Expression("FIELD(id, 244, 258, 256, 230, 232, 251)"))
             ->all();
-
+        // 志愿者/团队列表（全部展示，供左右滚动）
+        $volunteers = Volunteers::find()
+            ->orderBy(['publish_date' => SORT_DESC, 'id' => SORT_DESC])
+            ->limit(7)
+            ->all();
+    
     return $this->render('index', [
         'hotArticles' => $hotArticles,
             'featuredArticles' => $featuredArticles,
+            'volunteers' => $volunteers,
     ]);
 }
 
