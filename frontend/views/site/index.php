@@ -1456,170 +1456,74 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 
-      <!-- lorw portfolio area -->
+      <!-- museums area (case studies replaced) -->
+      <?php /* @var $museums common\models\Museums[] */ ?>
+      <?php if (!empty($museums)): ?>
       <div class="lorw_portfolio_area pstyle2 pstyle_1 port_area">
          <div class="container">
         <div class="row">
                <div class="col-lg-12">
                   <div class="witr_section_title">
                      <div class="witr_section_title_inner text-center">
-                        <h2>CASE STUDIES</h2>
-                        <h3>Our Latest Case Studies</h3>
+                        <h2>MUSEUMS</h2>
+                        <h3>纪念馆巡礼</h3>
                      </div>
                   </div>
                </div>
-               <div class="col-md-12">
-                  <div class="portfolio_nav  wittr_pfilter_menu">
-                     <ul id="filter" class="filter_menu ">
-                        <li class="current_menu_item" data-filter="*">All Work</li>
-                        <li data-filter=".business_law">Business Law</li>
-                        <li data-filter=".family_law">Family Law</li>
-                        <li data-filter=".finalcial_low">Finalcial Low</li>
-                        <li data-filter=".technology_low">Technology Low</li>
-                     </ul>
+               
                   </div>
-               </div>
+                    <div class="row">
                <div class="col-lg-12">
                   <div class="pstyle2 pstyle4">
                      <div class="prot_wrap row portfolio_active">
-                        <!-- 1 single portfolio -->
-                        <div class="grid-item col-lg-4 col-md-6 col-xs-12 col-sm-12 witr_all_mb_30 business_law family_law">
+                        <?php foreach ($museums as $museum): ?>
+                           <?php
+                           $link = !empty($museum->website_url) ? $museum->website_url : '#';
+                           $photo = $museum->photos;
+                           $imgUrl = '';
+                           if (!empty($photo)) {
+                               $imgUrl = preg_match('/^https?:/i', $photo)
+                                   ? $photo
+                                   : Url::to('@web/images/' . $photo);
+                           }
+                           ?>
+                           <div class="grid-item col-lg-4 col-md-6 col-xs-12 col-sm-12 witr_all_mb_30">
                            <div class="single_protfolio">
                               <div class="prot_thumb">
-                                 <img src="<?= Url::to('@web/images/p1.jpg') ?>" alt="image" />
-                                 <div class="prot_content">
-                                    <div class="prot_content_inner">
-                                       <div class="picon"> <a class="portfolio-icon venobox vbox-item" data-gall="myGallery" href="<?= Url::to('@web/images/p1.jpg') ?>"><i class="icofont-image"></i></a></div>
-                                    </div>
-                                 </div>
+                                <?php if ($imgUrl): ?>
+                                       <a href="<?= $link ?>" target="_blank">
+                                          <img src="<?= $imgUrl ?>" alt="<?= Html::encode($museum->name) ?>" />
+                                       </a>
+                                    <?php endif; ?> 
                               </div>
                               <div class="pprotfolio4">
                                  <div class="porttitle_inner4">
-                                    <h3><a href="#">Domestic Violence</a></h3>
-                                    <p><span class="category-item-p">Business Law</span>
-                                       <span class="category-item-p">Family Law</span>
+                                     <h3>
+                                          <a href="<?= $link ?>" target="_blank">
+                                             <?= Html::encode($museum->name) ?>
+                                          </a>
+                                       </h3>
+                                       <p>
+                                          <?php if (!empty($museum->address)): ?>
+                                             <span class="category-item-p"><?= Html::encode($museum->address) ?></span>
+                                          <?php endif; ?>
+                                          <?php if (!empty($museum->opening_hours)): ?>
+                                             <span class="category-item-p"><?= Html::encode($museum->opening_hours) ?></span>
+                                          <?php endif; ?>
                                     </p>
                                  </div>
                               </div>
                            </div>
                         </div>
-                        <!-- 2 single portfolio -->
-                        <div class="grid-item col-lg-4 col-md-6 col-xs-12 col-sm-12 witr_all_mb_30 business_law finalcial_low">
-                           <div class="single_protfolio">
-                              <div class="prot_thumb">
-                                 <img src="<?= Url::to('@web/images/p2.jpg') ?>" alt="image" />
-                                 <div class="prot_content">
-                                    <div class="prot_content_inner">
-                                       <div class="picon"> <a class="portfolio-icon venobox vbox-item" data-gall="myGallery" href="<?= Url::to('@web/images/p2.jpg') ?>"><i class="icofont-image"></i></a></div>
+                       <?php endforeach; ?>
                                     </div>
                                  </div>
                               </div>
-                              <div class="pprotfolio4">
-                                 <div class="porttitle_inner4">
-                                    <h3><a href="#">Labour Law</a></h3>
-                                    <p><span class="category-item-p">Business Law</span>
-                                       <span class="category-item-p">Finalcial Low</span>
-                                    </p>
+                              
                                  </div>
                               </div>
                            </div>
-                        </div>
-                        <!-- 3 single portfolio -->
-                        <div class="grid-item col-lg-4 col-md-6 col-xs-12 col-sm-12 witr_all_mb_30 family_law finalcial_low">
-                           <div class="single_protfolio">
-                              <div class="prot_thumb">
-                                 <img src="<?= Url::to('@web/images/p3.jpg') ?>" alt="image" />
-                                 <div class="prot_content">
-                                    <div class="prot_content_inner">
-                                       <div class="picon"> <a class="portfolio-icon venobox vbox-item" data-gall="myGallery" href="<?= Url::to('@web/images/p3.jpg') ?>"><i class="icofont-image"></i></a></div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div class="pprotfolio4">
-                                 <div class="porttitle_inner4">
-                                    <h3><a href="#">Common Law</a></h3>
-                                    <p>
-                                       <span class="category-item-p">Family Law </span>
-                                       <span class="category-item-p">Finalcial Low</span>
-                                    </p>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <!-- 4 single portfolio -->
-                        <div class="grid-item col-lg-4 col-md-6 col-xs-12 col-sm-12 witr_all_mb_30 business_law finalcial_low">
-                           <div class="single_protfolio">
-                              <div class="prot_thumb">
-                                 <img src="<?= Url::to('@web/images/p4.jpg') ?>" alt="image" />
-                                 <div class="prot_content">
-                                    <div class="prot_content_inner">
-                                       <div class="picon"> <a class="portfolio-icon venobox vbox-item" data-gall="myGallery" href="<?= Url::to('@web/images/p4.jpg') ?>"><i class="icofont-image"></i></a></div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div class="pprotfolio4">
-                                 <div class="porttitle_inner4">
-                                    <h3><a href="#">Tax Law</a></h3>
-                                    <p><span class="category-item-p">Business Law</span> 
-                                       <span class="category-item-p">Finalcial Low</span>
-                                    </p>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <!-- 5 single portfolio -->
-                        <div class="grid-item col-lg-4 col-md-6 col-xs-12 col-sm-12 witr_all_mb_30 technology_low">
-                           <div class="single_protfolio">
-                              <div class="prot_thumb">
-                                 <img src="<?= Url::to('@web/images/p5.jpg') ?>" alt="image" />
-                                 <div class="prot_content">
-                                    <div class="prot_content_inner">
-                                       <div class="picon"> <a class="portfolio-icon venobox vbox-item" data-gall="myGallery" href="<?= Url::to('@web/images/p5.jpg') ?>"><i class="icofont-image"></i></a></div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div class="pprotfolio4">
-                                 <div class="porttitle_inner4">
-                                    <h3><a href="#">Family Low</a></h3>
-                                    <p> <span class="category-item-p">Family Law  </span> <span class="category-item-p">Technology Low</span></p>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <!-- 6 single portfolio -->
-                        <div class="grid-item col-lg-4 col-md-6 col-xs-12 col-sm-12 witr_all_mb_30 technology_low">
-                           <div class="single_protfolio">
-                              <div class="prot_thumb">
-                                 <img src="<?= Url::to('@web/images/p6.jpg') ?>" alt="image" />
-                                 <div class="prot_content">
-                                    <div class="prot_content_inner">
-                                       <div class="picon"> <a class="portfolio-icon venobox vbox-item" data-gall="myGallery" href="<?= Url::to('@web/images/p6.jpg') ?>"><i class="icofont-image"></i></a></div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div class="pprotfolio4">
-                                 <div class="porttitle_inner4">
-                                    <h3><a href="#">Real Estate Law</a></h3>
-                                    <p>
-                                       <span class="category-item-p">Family Law  </span> 
-                                       <span class="category-item-p">Technology Low</span>
-                                    </p>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <!-- button -->
-            <div class="witr_button_area">
-               <div class="witr_btn_style mr">
-                  <div class="witr_btn_sinner"> <a href="#" class="witr_btn">View Project </a></div>
-               </div>
-            </div>
-         </div>
-      </div>
+                <?php endif; ?>         
       <!-- lorw blog area -->
       <div class="lorw_blog_area">
          <div class="container">
