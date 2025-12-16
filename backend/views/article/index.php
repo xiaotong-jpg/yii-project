@@ -32,7 +32,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'title',
-            'cover_image',
+            [
+                'attribute' => 'cover_image',
+                'format' => 'raw',
+                'contentOptions' => [
+                    'style' => 'max-width:200px; white-space: normal; word-break: break-all;',
+                ],
+            ],
+
             //'content:ntext',
             'author',
             //'publish_date',
