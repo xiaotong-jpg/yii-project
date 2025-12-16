@@ -2,7 +2,10 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+/**
+ * Team: NoDDL,NKU
+ * Coding by wanghaoran 2311089
+ */
 /* @var $this yii\web\View */
 /* @var $model common\models\ArticleSearch */
 /* @var $form yii\widgets\ActiveForm */
