@@ -56,87 +56,152 @@ $this->params['breadcrumbs'][] = $this->title;
       <div class="lorw_service_area">
          <div class="container">
             <div class="row service_inner">
-               <!-- 1 single feature -->
-               <div class="col-lg-4 col-md-6">
-                  <div class="em-service all_color_service text-center">
-                     <div class="em_service_content">
-                        <div class="em_single_service_text ">
-                           <div class="service_top_text">
-                              <div class="em-service-icon all_icon_color"><i class="flaticon flaticon-phone-call"></i></div>
-                              <div class="em-service-title">
-                                 <h3><a href="#">Please Call Us to Take an</a></h3>
+               <?php
+               /* @var $hotArticles common\models\Article[] */
+               $cardImages = [
+                   220 => 'https://www.news.cn/photo/20250904/ca7cfeb13a304cdc89d73ca3d57b9853/20250904ca7cfeb13a304cdc89d73ca3d57b9853_202509043876f991b3ad44ee9722fa233d5f4a62.jpg',
+                   222 => 'https://www.news.cn/photo/20250903/01bd5fbb96e14e3a861d1843c078cce8/VsGqt7VUa7e6eMnL.jpg',
+                   223 => 'https://www.news.cn/politics/leaders/20250903/c13ca6bee464410695e47b0fb1e96b8a/20250903c13ca6bee464410695e47b0fb1e96b8a_202509030cc3469416904ba89646c8ecec8d86a0.jpg',
+               ];
+               ?>
+               <?php if (!empty($hotArticles)): ?>
+                  <?php foreach ($hotArticles as $article): ?>
+                     <?php
+                     $link = !empty($article->source_url)
+                         ? $article->source_url
+                         : \yii\helpers\Url::to(['site/article', 'id' => $article->id]);
+                     ?>
+                     <div class="col-lg-4 col-md-6">
+                        <div class="em-service all_color_service text-center" style="background-image: url('<?= isset($cardImages[$article->id]) ? $cardImages[$article->id] : '' ?>'); background-size: cover; background-position: center; position: relative; min-height: 420px;">
+                           <div class="em_service_content" style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 32px; background: linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.65) 100%); color: #fff;">
+                              <div class="em_single_service_text ">
+                                 <div class="em-service-title">
+                                    <h3>
+                                       <a href="<?= $link ?>" style="color: #fff;">
+                                          <?= \yii\helpers\Html::encode($article->title) ?>
+                                       </a>
+                                    </h3>
+                                 </div>
+                                 <div class="em-service-inner">
+                                    <div class="em-service-desc">
+                                       <p style="color: #fff;"><?= \yii\helpers\Html::encode(mb_substr(strip_tags((string)$article->content), 0, 80)) ?>...</p>
+                                    </div>
+                                 </div>
+                                 <div class="service-btn">
+                                    <a href="<?= $link ?>" style="color: #fff; border-color: rgba(255,255,255,0.6);">Read More <span class="icofont-double-right"></span></a>
+                                 </div>
                               </div>
-                           </div>
-                           <div class="em-service-inner">
-                              <div class="em-service-desc">
-                                 <p>Lorem ipsum dolor sit amet, consectetuer 
-                                    adipiscing elit, sed diam nonummy 
-                                    nibh euismod tincidunt
-                                 </p>
-                              </div>
-                           </div>
-                           <div class="service-btn">
-                              <a href="#">Read More <span class="icofont-double-right"></span></a>
                            </div>
                         </div>
                      </div>
+                  <?php endforeach; ?>
+               <?php endif; ?>
+            </div>
+         </div>
+      </div>
+
+      <!-- news showcase area -->
+      <?php
+      /* @var $featuredArticles common\models\Article[] */
+      ?>
+      <?php if (!empty($featuredArticles)): ?>
+      <style>
+         .nh-showcase{margin-top:40px;margin-bottom:40px;}
+         .nh-slide{display:none;position:relative;overflow:hidden;border-radius:6px;}
+         .nh-slide.active{display:block;}
+         .nh-slide img{width:100%;height:420px;object-fit:cover;display:block;}
+         .nh-caption{position:absolute;left:0;right:0;bottom:0;padding:16px 20px;background:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,rgba(0,0,0,0.78) 100%);color:#fff;}
+         .nh-caption h4{margin:0;font-size:20px;line-height:1.4;text-shadow:0 1px 3px rgba(0,0,0,0.6);color:#fff!important;}
+         .nh-caption a{color:#fff!important;text-decoration:none;}
+         .nh-list{list-style:none;padding:0;margin:0;}
+         .nh-item{padding:12px 14px;border-bottom:1px solid #e5e5e5;cursor:pointer;}
+         .nh-item:last-child{border-bottom:none;}
+         .nh-item a{color:#333;display:block;text-decoration:none;}
+         .nh-item.active{background:#f5f5f5;font-weight:600;}
+      </style>
+      <div class="nh-showcase">
+         <div class="container">
+            <div class="row">
+               <div class="col-lg-8">
+                  <div class="nh-carousel">
+                     <?php foreach ($featuredArticles as $idx => $article): ?>
+                        <?php
+                        $link = !empty($article->source_url)
+                            ? $article->source_url
+                            : \yii\helpers\Url::to(['site/article', 'id' => $article->id]);
+                        $cover = $article->cover_image;
+                        $imgUrl = '';
+                        if (!empty($cover)) {
+                            $imgUrl = preg_match('/^https?:/i', $cover)
+                                ? $cover
+                                : \yii\helpers\Url::to('@web/images/' . $cover);
+                        }
+                        ?>
+                        <div class="nh-slide <?= $idx === 0 ? 'active' : '' ?>" data-key="<?= $article->id ?>">
+                           <a href="<?= $link ?>">
+                              <?php if ($imgUrl): ?>
+                                 <img src="<?= $imgUrl ?>" alt="<?= \yii\helpers\Html::encode($article->title) ?>">
+                              <?php endif; ?>
+                              <div class="nh-caption">
+                                 <h4><?= \yii\helpers\Html::encode($article->title) ?></h4>
+                              </div>
+                           </a>
+                        </div>
+                     <?php endforeach; ?>
                   </div>
                </div>
-               <!-- 2 single feature -->
-               <div class="col-lg-4 col-md-6">
-                  <div class="em-service all_color_service text-center">
-                     <div class="em_service_content">
-                        <div class="em_single_service_text ">
-                           <div class="service_top_text">
-                              <div class="em-service-icon all_icon_color"><i class="flaticon flaticon-project-management"></i></div>
-                              <div class="em-service-title">
-                                 <h3><a href="#">Case Dismissed</a></h3>
-                              </div>
-                           </div>
-                           <div class="em-service-inner">
-                              <div class="em-service-desc">
-                                 <p>Lorem ipsum dolor sit amet, consectetuer 
-                                    adipiscing elit, sed diam nonummy 
-                                    nibh euismod tincidunt
-                                 </p>
-                              </div>
-                           </div>
-                           <div class="service-btn">
-                              <a href="#">Read More <span class="icofont-double-right"></span></a>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- 3 single feature -->
-               <div class="col-lg-4 col-md-6">
-                  <div class="em-service all_color_service text-center">
-                     <div class="em_service_content">
-                        <div class="em_single_service_text ">
-                           <div class="service_top_text">
-                              <div class="em-service-icon all_icon_color"><i class="flaticon flaticon-temporary-agency"></i></div>
-                              <div class="em-service-title">
-                                 <h3><a href="#">Expert Attorneys</a></h3>
-                              </div>
-                           </div>
-                           <div class="em-service-inner">
-                              <div class="em-service-desc">
-                                 <p>Lorem ipsum dolor sit amet, consectetuer 
-                                    adipiscing elit, sed diam nonummy 
-                                    nibh euismod tincidunt
-                                 </p>
-                              </div>
-                           </div>
-                           <div class="service-btn">
-                              <a href="#">Read More <span class="icofont-double-right"></span></a>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
+               <div class="col-lg-4">
+                  <ul class="nh-list">
+                     <?php foreach ($featuredArticles as $idx => $article): ?>
+                        <?php
+                        $link = !empty($article->source_url)
+                            ? $article->source_url
+                            : \yii\helpers\Url::to(['site/article', 'id' => $article->id]);
+                        ?>
+                        <li class="nh-item <?= $idx === 0 ? 'active' : '' ?>" data-key="<?= $article->id ?>">
+                           <a href="<?= $link ?>"><?= \yii\helpers\Html::encode($article->title) ?></a>
+                        </li>
+                     <?php endforeach; ?>
+                  </ul>
                </div>
             </div>
          </div>
       </div>
+      <script>
+         (function() {
+            const slides = Array.from(document.querySelectorAll('.nh-slide'));
+            const items = Array.from(document.querySelectorAll('.nh-item'));
+            if (!slides.length) return;
+            let idx = 0;
+            let timer;
+
+            function show(i) {
+               idx = i;
+               slides.forEach((s, k) => s.classList.toggle('active', k === idx));
+               items.forEach((it, k) => it.classList.toggle('active', k === idx));
+            }
+            function next() {
+               const n = (idx + 1) % slides.length;
+               show(n);
+            }
+            function restart() {
+               clearInterval(timer);
+               timer = setInterval(next, 5000);
+            }
+
+            items.forEach((it, i) => {
+               it.addEventListener('mouseenter', () => { show(i); restart(); });
+               it.addEventListener('click', () => { show(i); restart(); });
+            });
+            slides.forEach((s, i) => {
+               s.addEventListener('mouseenter', () => { show(i); restart(); });
+            });
+
+            show(0);
+            restart();
+         })();
+      </script>
+      <?php endif; ?>
       <!-- about area  -->
       <div class="lorw_about_area">
          <div class="container ">
@@ -720,133 +785,93 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
          </div>
       </div>
-      <!-- lorw team area -->
-      <div class="lorw_team_area">
+      <!-- volunteers slider area -->
+      <?php /* @var $volunteers common\models\Volunteers[] */ ?>
+      <?php if (!empty($volunteers)): ?>
+      <style>
+         .vol-section{margin:50px 0;}
+         .vol-header{text-align:center;margin-bottom:24px;}
+         .vol-header h2{margin:0;font-size:28px;}
+         .vol-header h3{margin:6px 0 0;font-size:18px;color:#a57a2f;letter-spacing:1px;}
+         .vol-wrap{position:relative;}
+         .vol-window{overflow:hidden;}
+         .vol-track{display:flex;gap:24px;transition:transform .35s ease;}
+         .vol-card{flex:0 0 300px;max-width:300px;border:1px solid #eee;border-radius:6px;overflow:hidden;box-shadow:0 8px 18px rgba(0,0,0,0.06);background:#fff;}
+         .vol-card img{width:100%;height:220px;object-fit:cover;display:block;}
+         .vol-card .vol-body{padding:14px 16px;}
+         .vol-card .vol-title{font-size:18px;font-weight:700;color:#0b1a3f;margin:0 0 8px;line-height:1.35;}
+         .vol-card .vol-summary{font-size:14px;color:#555;margin:0 0 10px;min-height:40px;}
+         .vol-card .vol-meta{font-size:12px;color:#999;}
+         .vol-nav{position:absolute;top:40%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:1px solid #d0d0d0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.12);}
+         .vol-nav:disabled{opacity:0.4;cursor:not-allowed;}
+         .vol-prev{left:-10px;}
+         .vol-next{right:-10px;}
+      </style>
+      <div class="vol-section"> 
          <div class="container">
-            <div class="row">
-               <div class="col-lg-12">
-                  <div class="col-lg-12">
-                     <div class="witr_section_title">
-                        <div class="witr_section_title_inner text-center">
-                           <h2>OUR TEAM</h2>
-                           <h3>Our Expert Lawyers</h3>
-                        </div>
+            <div class="vol-header">
+               <h3>Volunteers</h3>
+               <h2>志愿者风采</h2>
+                  </div>
+                  <div class="vol-wrap">
+               <button class="vol-nav vol-prev" type="button" aria-label="prev">‹</button>
+               <div class="vol-window">
+                  <div class="vol-track">
+                     <?php foreach ($volunteers as $vol): ?>
+                        <?php
+                        $link = !empty($vol->detail_url) ? $vol->detail_url : '#';
+                        $photo = $vol->photo_url;
+                        $imgUrl = '';
+                        if (!empty($photo)) {
+                            $imgUrl = preg_match('/^https?:/i', $photo)
+                                ? $photo
+                                : Url::to('@web/images/' . $photo);
+                        }
+                        ?>
+                        <a class="vol-card" href="<?= $link ?>" target="_blank">
+                           <?php if ($imgUrl): ?>
+                              <img src="<?= $imgUrl ?>" alt="<?= Html::encode($vol->title) ?>">
+                           <?php endif; ?>
+                           <div class="vol-body">
+                              <div class="vol-title"><?= Html::encode($vol->title) ?></div>
+                              <?php if (!empty($vol->summary)): ?>
+                                 <p class="vol-summary"><?= Html::encode(mb_substr(strip_tags((string)$vol->summary), 0, 60)) ?>...</p>
+                              <?php endif; ?>
+                              <div class="vol-meta"><?= Html::encode($vol->publish_date) ?></div>
                      </div>
+                  </a>
+                     <?php endforeach; ?>
                   </div>
                </div>
+               <button class="vol-nav vol-next" type="button" aria-label="next">›</button>
             </div>
-            <div class="row team_active">
-               <!-- 1 single team -->
-               <div class="witr_all_mb_30 col-md-12 col-xs-12 col-sm-12 col-lg-12">
-                  <div class=" all_color_team ">
-                     <div class="witr_team_section"> 
-                        <img src="<?= Url::to('@web/images/team-04.jpg') ?>" alt="image" />
                      </div>
-                     <div class="post_team_content">
-                        <div class="post_team_icon_9 all_team_icon_o_color">
-                           <ul class="witr_pots_team_s">
-                              <li>
-                                 <a href="#"><i class="icofont-facebook"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-twitter"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-pinterest"></i></a>
-                              </li>
-                           </ul>
                         </div>
-                        <div class="post_team_content9 all_content_bg_color">
-                           <h5><a href="#">Liton Sarkar </a></h5>
-                           <span>Founder </span>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- 2 single team -->
-               <div class="witr_all_mb_30 col-md-12 col-xs-12 col-sm-12 col-lg-12">
-                  <div class=" all_color_team ">
-                     <div class="witr_team_section"> 
-                        <img src="<?= Url::to('@web/images/team-05.jpg') ?>" alt="image" />
-                     </div>
-                     <div class="post_team_content">
-                        <div class="post_team_icon_9 all_team_icon_o_color">
-                           <ul class="witr_pots_team_s">
-                              <li>
-                                 <a href="#"><i class="icofont-facebook"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-twitter"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-pinterest"></i></a>
-                              </li>
-                           </ul>
-                        </div>
-                        <div class="post_team_content9 all_content_bg_color">
-                           <h5><a href="#">Tomas Brown </a></h5>
-                           <span>Founder </span>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- 3 single team -->
-               <div class="witr_all_mb_30 col-md-12 col-xs-12 col-sm-12 col-lg-12">
-                  <div class=" all_color_team ">
-                     <div class="witr_team_section"> 
-                        <img src="<?= Url::to('@web/images/team-06.jpg') ?>" alt="image" />
-                     </div>
-                     <div class="post_team_content">
-                        <div class="post_team_icon_9 all_team_icon_o_color">
-                           <ul class="witr_pots_team_s">
-                              <li>
-                                 <a href="#"><i class="icofont-facebook"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-twitter"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-pinterest"></i></a>
-                              </li>
-                           </ul>
-                        </div>
-                        <div class="post_team_content9 all_content_bg_color">
-                           <h5><a href="#">Assadul Islam </a></h5>
-                           <span>Founder </span>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <!-- 4 single team -->
-               <div class="witr_all_mb_30 col-md-12 col-xs-12 col-sm-12 col-lg-12">
-                  <div class=" all_color_team ">
-                     <div class="witr_team_section"> 
-                        <img src="<?= Url::to('@web/images/team-05.jpg') ?>" alt="image" />
-                     </div>
-                     <div class="post_team_content">
-                        <div class="post_team_icon_9 all_team_icon_o_color">
-                           <ul class="witr_pots_team_s">
-                              <li>
-                                 <a href="#"><i class="icofont-facebook"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-twitter"></i></a>
-                              </li>
-                              <li>
-                                 <a href="#"><i class="icofont-pinterest"></i></a>
-                              </li>
-                           </ul>
-                        </div>
-                        <div class="post_team_content9 all_content_bg_color">
-                           <h5><a href="#">Shamim Sarkar </a></h5>
-                           <span>Founder </span>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
+               <script>
+         (function(){
+            const track = document.querySelector('.vol-track');
+            const windowEl = document.querySelector('.vol-window');
+            const prev = document.querySelector('.vol-prev');
+            const next = document.querySelector('.vol-next');
+            if(!track || !windowEl) return;
+            const cards = Array.from(track.children);
+            if(!cards.length) return;
+            const gap = 24;
+            const cardWidth = cards[0].getBoundingClientRect().width;
+            let offset = 0;
+            function update(dir){
+               const max = Math.max(0, track.scrollWidth - windowEl.clientWidth);
+               offset = Math.min(max, Math.max(0, offset + dir * (cardWidth + gap)));
+               track.style.transform = 'translateX(' + (-offset) + 'px)';
+               prev.disabled = offset <= 0;
+               next.disabled = offset >= max - 1;
+            }
+            prev && prev.addEventListener('click', () => update(-1));
+            next && next.addEventListener('click', () => update(1));
+            update(0);
+         })();
+      </script>
+      <?php endif; ?>        
 
 
 
@@ -1431,170 +1456,74 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 
-      <!-- lorw portfolio area -->
+      <!-- museums area (case studies replaced) -->
+      <?php /* @var $museums common\models\Museums[] */ ?>
+      <?php if (!empty($museums)): ?>
       <div class="lorw_portfolio_area pstyle2 pstyle_1 port_area">
          <div class="container">
         <div class="row">
                <div class="col-lg-12">
                   <div class="witr_section_title">
                      <div class="witr_section_title_inner text-center">
-                        <h2>CASE STUDIES</h2>
-                        <h3>Our Latest Case Studies</h3>
+                        <h2>MUSEUMS</h2>
+                        <h3>纪念馆巡礼</h3>
                      </div>
                   </div>
                </div>
-               <div class="col-md-12">
-                  <div class="portfolio_nav  wittr_pfilter_menu">
-                     <ul id="filter" class="filter_menu ">
-                        <li class="current_menu_item" data-filter="*">All Work</li>
-                        <li data-filter=".business_law">Business Law</li>
-                        <li data-filter=".family_law">Family Law</li>
-                        <li data-filter=".finalcial_low">Finalcial Low</li>
-                        <li data-filter=".technology_low">Technology Low</li>
-                     </ul>
+               
                   </div>
-               </div>
+                    <div class="row">
                <div class="col-lg-12">
                   <div class="pstyle2 pstyle4">
                      <div class="prot_wrap row portfolio_active">
-                        <!-- 1 single portfolio -->
-                        <div class="grid-item col-lg-4 col-md-6 col-xs-12 col-sm-12 witr_all_mb_30 business_law family_law">
+                        <?php foreach ($museums as $museum): ?>
+                           <?php
+                           $link = !empty($museum->website_url) ? $museum->website_url : '#';
+                           $photo = $museum->photos;
+                           $imgUrl = '';
+                           if (!empty($photo)) {
+                               $imgUrl = preg_match('/^https?:/i', $photo)
+                                   ? $photo
+                                   : Url::to('@web/images/' . $photo);
+                           }
+                           ?>
+                           <div class="grid-item col-lg-4 col-md-6 col-xs-12 col-sm-12 witr_all_mb_30">
                            <div class="single_protfolio">
                               <div class="prot_thumb">
-                                 <img src="<?= Url::to('@web/images/p1.jpg') ?>" alt="image" />
-                                 <div class="prot_content">
-                                    <div class="prot_content_inner">
-                                       <div class="picon"> <a class="portfolio-icon venobox vbox-item" data-gall="myGallery" href="<?= Url::to('@web/images/p1.jpg') ?>"><i class="icofont-image"></i></a></div>
-                                    </div>
-                                 </div>
+                                <?php if ($imgUrl): ?>
+                                       <a href="<?= $link ?>" target="_blank">
+                                          <img src="<?= $imgUrl ?>" alt="<?= Html::encode($museum->name) ?>" />
+                                       </a>
+                                    <?php endif; ?> 
                               </div>
                               <div class="pprotfolio4">
                                  <div class="porttitle_inner4">
-                                    <h3><a href="#">Domestic Violence</a></h3>
-                                    <p><span class="category-item-p">Business Law</span>
-                                       <span class="category-item-p">Family Law</span>
+                                     <h3>
+                                          <a href="<?= $link ?>" target="_blank">
+                                             <?= Html::encode($museum->name) ?>
+                                          </a>
+                                       </h3>
+                                       <p>
+                                          <?php if (!empty($museum->address)): ?>
+                                             <span class="category-item-p"><?= Html::encode($museum->address) ?></span>
+                                          <?php endif; ?>
+                                          <?php if (!empty($museum->opening_hours)): ?>
+                                             <span class="category-item-p"><?= Html::encode($museum->opening_hours) ?></span>
+                                          <?php endif; ?>
                                     </p>
                                  </div>
                               </div>
                            </div>
                         </div>
-                        <!-- 2 single portfolio -->
-                        <div class="grid-item col-lg-4 col-md-6 col-xs-12 col-sm-12 witr_all_mb_30 business_law finalcial_low">
-                           <div class="single_protfolio">
-                              <div class="prot_thumb">
-                                 <img src="<?= Url::to('@web/images/p2.jpg') ?>" alt="image" />
-                                 <div class="prot_content">
-                                    <div class="prot_content_inner">
-                                       <div class="picon"> <a class="portfolio-icon venobox vbox-item" data-gall="myGallery" href="<?= Url::to('@web/images/p2.jpg') ?>"><i class="icofont-image"></i></a></div>
+                       <?php endforeach; ?>
                                     </div>
                                  </div>
                               </div>
-                              <div class="pprotfolio4">
-                                 <div class="porttitle_inner4">
-                                    <h3><a href="#">Labour Law</a></h3>
-                                    <p><span class="category-item-p">Business Law</span>
-                                       <span class="category-item-p">Finalcial Low</span>
-                                    </p>
+                              
                                  </div>
                               </div>
                            </div>
-                        </div>
-                        <!-- 3 single portfolio -->
-                        <div class="grid-item col-lg-4 col-md-6 col-xs-12 col-sm-12 witr_all_mb_30 family_law finalcial_low">
-                           <div class="single_protfolio">
-                              <div class="prot_thumb">
-                                 <img src="<?= Url::to('@web/images/p3.jpg') ?>" alt="image" />
-                                 <div class="prot_content">
-                                    <div class="prot_content_inner">
-                                       <div class="picon"> <a class="portfolio-icon venobox vbox-item" data-gall="myGallery" href="<?= Url::to('@web/images/p3.jpg') ?>"><i class="icofont-image"></i></a></div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div class="pprotfolio4">
-                                 <div class="porttitle_inner4">
-                                    <h3><a href="#">Common Law</a></h3>
-                                    <p>
-                                       <span class="category-item-p">Family Law </span>
-                                       <span class="category-item-p">Finalcial Low</span>
-                                    </p>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <!-- 4 single portfolio -->
-                        <div class="grid-item col-lg-4 col-md-6 col-xs-12 col-sm-12 witr_all_mb_30 business_law finalcial_low">
-                           <div class="single_protfolio">
-                              <div class="prot_thumb">
-                                 <img src="<?= Url::to('@web/images/p4.jpg') ?>" alt="image" />
-                                 <div class="prot_content">
-                                    <div class="prot_content_inner">
-                                       <div class="picon"> <a class="portfolio-icon venobox vbox-item" data-gall="myGallery" href="<?= Url::to('@web/images/p4.jpg') ?>"><i class="icofont-image"></i></a></div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div class="pprotfolio4">
-                                 <div class="porttitle_inner4">
-                                    <h3><a href="#">Tax Law</a></h3>
-                                    <p><span class="category-item-p">Business Law</span> 
-                                       <span class="category-item-p">Finalcial Low</span>
-                                    </p>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <!-- 5 single portfolio -->
-                        <div class="grid-item col-lg-4 col-md-6 col-xs-12 col-sm-12 witr_all_mb_30 technology_low">
-                           <div class="single_protfolio">
-                              <div class="prot_thumb">
-                                 <img src="<?= Url::to('@web/images/p5.jpg') ?>" alt="image" />
-                                 <div class="prot_content">
-                                    <div class="prot_content_inner">
-                                       <div class="picon"> <a class="portfolio-icon venobox vbox-item" data-gall="myGallery" href="<?= Url::to('@web/images/p5.jpg') ?>"><i class="icofont-image"></i></a></div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div class="pprotfolio4">
-                                 <div class="porttitle_inner4">
-                                    <h3><a href="#">Family Low</a></h3>
-                                    <p> <span class="category-item-p">Family Law  </span> <span class="category-item-p">Technology Low</span></p>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <!-- 6 single portfolio -->
-                        <div class="grid-item col-lg-4 col-md-6 col-xs-12 col-sm-12 witr_all_mb_30 technology_low">
-                           <div class="single_protfolio">
-                              <div class="prot_thumb">
-                                 <img src="<?= Url::to('@web/images/p6.jpg') ?>" alt="image" />
-                                 <div class="prot_content">
-                                    <div class="prot_content_inner">
-                                       <div class="picon"> <a class="portfolio-icon venobox vbox-item" data-gall="myGallery" href="<?= Url::to('@web/images/p6.jpg') ?>"><i class="icofont-image"></i></a></div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div class="pprotfolio4">
-                                 <div class="porttitle_inner4">
-                                    <h3><a href="#">Real Estate Law</a></h3>
-                                    <p>
-                                       <span class="category-item-p">Family Law  </span> 
-                                       <span class="category-item-p">Technology Low</span>
-                                    </p>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <!-- button -->
-            <div class="witr_button_area">
-               <div class="witr_btn_style mr">
-                  <div class="witr_btn_sinner"> <a href="#" class="witr_btn">View Project </a></div>
-               </div>
-            </div>
-         </div>
-      </div>
+                <?php endif; ?>         
       <!-- lorw blog area -->
       <div class="lorw_blog_area">
          <div class="container">
