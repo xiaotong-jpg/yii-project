@@ -1,0 +1,47 @@
+<?php
+
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+/**
+ * Team: NoDDL,NKU
+ * Coding by wanghaoran 2311089
+ */
+/* @var $this yii\web\View */
+/* @var $model common\models\ArticleSearch */
+/* @var $form yii\widgets\ActiveForm */
+?>
+
+<div class="article-search">
+
+    <?php $form = ActiveForm::begin([
+        'action' => ['index'],
+        'method' => 'get',
+        'options' => [
+            'data-pjax' => 1
+        ],
+    ]); ?>
+
+    <?= $form->field($model, 'id') ?>
+
+    <?= $form->field($model, 'title') ?>
+
+    <?= $form->field($model, 'cover_image') ?>
+
+    <?= $form->field($model, 'content') ?>
+
+    <?= $form->field($model, 'author') ?>
+
+    <?php // echo $form->field($model, 'publish_date') ?>
+
+    <?php // echo $form->field($model, 'source_url') ?>
+
+    <?php // echo $form->field($model, 'status') ?>
+
+    <div class="form-group">
+        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
+        <?= Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
+
+</div>

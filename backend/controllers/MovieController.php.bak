@@ -1,0 +1,40 @@
+<?php
+// Backup of original MovieController.php
+namespace backend\controllers;
+
+use yii\web\Controller;
+use yii\data\ArrayDataProvider;
+use Yii;
+
+class MovieController extends Controller
+{
+    public function actionIndex()
+    {
+        // 从数据库读取 anti_war_movies 表的数据
+        $rows = Yii::$app->db->createCommand('SELECT id, title, cover_image, director, release_date FROM anti_war_movies ORDER BY id DESC')->queryAll();
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $rows,
+            'pagination' => ['pageSize' => 20],
+            'sort' => ['attributes' => ['id', 'title', 'release_date']],
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionDashboard()
+    {
+        $total = (int) Yii::$app->db->createCommand('SELECT COUNT(*) FROM anti_war_movies')->queryScalar();
+        $withCover = (int) Yii::$app->db->createCommand("SELECT COUNT(*) FROM anti_war_movies WHERE cover_image IS NOT NULL AND cover_image <> ''")->queryScalar();
+
+        $recent = Yii::$app->db->createCommand('SELECT id, title, cover_image, director, release_date FROM anti_war_movies ORDER BY id DESC LIMIT 6')->queryAll();
+
+        return $this->render('dashboard', [
+            'total' => $total,
+            'withCover' => $withCover,
+            'recent' => $recent,
+        ]);
+    }
+}
